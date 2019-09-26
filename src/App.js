@@ -69,7 +69,7 @@ class App extends Component {
     ) {
       result.push(i);
     }
-    
+
     return result;
   };
 
@@ -140,143 +140,8 @@ class App extends Component {
       </div>
     );
   }
-
-  /*RenderItem = ({ index, style }) => {
-    const { items } = this.props;
-    let content;
-    if (!this.isItemLoaded(index)) {
-      content = "Loading...";
-    } else {
-      content = items[index].title;
-    }
-    const imagesrc = `//via.placeholder.com/90x90.png?text=${content}`;
-    return (
-      <div className="item" style={style}>
-        {content}::{index}
-        <img alt={content} src={imagesrc} />
-      </div>
-    );
-  };*/
-
-  /*
-   <AutoSizer>
-          {({ height, width }) => {
-            this.itemsPerRow = Math.floor(width / ITEM_SIZE);
-            const rowCount = Math.ceil(itemCount / this.itemsPerRow);
-            return (
-              <InfiniteLoader
-                isItemLoaded={this.isItemLoaded}
-                itemCount={itemCount}
-                loadMoreItems={this.loadNextPage}
-              >
-                {({ onItemsRendered, ref }) => (
-                  <Grid
-                    columnCount={this.itemsPerRow}
-                    columnWidth={ITEM_SIZE}
-                    height={height}
-                    rowCount={rowCount}
-                    rowHeight={ITEM_HEIGHT}
-                            width={width}
-                            onItemsRendered={onItemsRendered}
-                  >
-                    {this.RenderCell}
-                  </Grid>
-                )}
-              </InfiniteLoader>
-            );
-          }}
-        </AutoSizer>
-      */
-
-  /*<List
-                    className="List"
-                    height={height}
-                    itemCount={itemCount}
-                    itemSize={ITEM_HEIGHT}
-                    onItemsRendered={onItemsRendered}
-                    ref={ref}
-                    width={width}
-                  >
-                    {this.RenderItem}
-                  </List>*/
-
-  /*const isRowLoaded = ({ index }) => {
-            //console.log("IsRowLoaded", index)
-            const fromIndex = index * this.itemsPerRow;
-            const toIndex = Math.min(fromIndex + this.itemsPerRow, this.itemCount);
-
-            for (let i = fromIndex; i < toIndex; i++) {
-                if (!items[i]) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        const ITEM_SIZE = 275;
-        const ITEM_HEIGHT = 200;
-
-        return (
-            <div className="App">
-                 <AutoSizer>
-                    {({ height, width }) => {
-
-                        this.itemsPerRow = Math.floor(width / ITEM_SIZE);      
-                        const rowCount = Math.ceil(this.itemCount / this.itemsPerRow);
-
-                        return <InfiniteLoader
-                            isRowLoaded={isRowLoaded}
-                            loadMoreRows={this.loadMoreItems}
-                            rowCount={rowCount}
-                            minimumBatchSize={Math.floor(30 / this.itemsPerRow)}
-                            
-                        >
-                            {({ onRowsRendered, registerChild }) => (
-                                <List
-                                    ref={registerChild}
-                                    onRowsRendered={onRowsRendered}
-                                    height={height}
-                                    width={width}
-                                    rowHeight={ITEM_HEIGHT}
-                                    rowCount={rowCount}
-                                    rowRenderer={
-                                        ({ index, key, style }) => {
-
-                                            const renderItems = [];
-                                            const fromIndex = index * this.itemsPerRow;
-                                            const toIndex = Math.min(fromIndex + this.itemsPerRow, this.itemCount);
-
-                                            for (let i = fromIndex; i < toIndex; i++) {
-                                                const item = items[i];
-                                                const title = item ? item.title : "Loading";
-
-                                                renderItems.push(<ItemDisplay className="Item" key={i} index={i} title={title} />)
-                                            }
-
-                                            return (
-                                                <div
-                                                    className='Row'
-                                                    key={key}
-                                                    style={style}
-                                                >
-                                                    {renderItems}
-                                                </div>
-                                            )
-                                        }}
-                                />
-                            )}
-                        </InfiniteLoader>
-                    }}
-                </AutoSizer>
-
-
-
-
-            </div>
-        );
-    }*/
 }
+
 const mapStateToProps = state => {
   //console.log("state", state)
   return {
