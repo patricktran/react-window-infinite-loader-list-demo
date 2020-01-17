@@ -1,40 +1,69 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { connect } from "react-redux";
 import "./App.css";
-import { FixedSizeList as List } from "react-window";
+import { VariableSizeList as List } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import Grid from "@material-ui/core/Grid";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { WindowScroller } from "react-virtualized";
 
 const ITEM_WIDTH = 275;
 const ITEM_HEIGHT = 200;
 
-const ItemDisplay = ({ title }) => {
+const ItemDisplay = React.forwardRef(({ title, description }, ref) => {
   const imagesrc = `//via.placeholder.com/90x90.png?text=${title}`;
+
   return (
-    <div className="item">
-      {title}
+    <div ref={ref} className="item">
+      <span>{title}</span>
       <img alt={title} src={imagesrc} />
+      <span>{description}</span>
     </div>
   );
-};
+});
 
-const RowItem = React.memo(function RowItem({ title, id }) {
+const RowItem = React.memo(function RowItem({
+  title,
+  description,
+  id,
+  rowIndex,
+  setRowSize,
+  windowWidth
+}) {
+  const itemRef = React.useRef();
+
+  useEffect(() => {
+    setRowSize(rowIndex, itemRef.current.getBoundingClientRect().height);
+  }, [windowWidth]);
+
   return (
-    <Grid item key={id} className={"mui-grid-item"}>
-      <ItemDisplay title={title} />
-    </Grid>
+    <div className="bordered">
+      <Grid item key={id} className={"mui-grid-item"}>
+        <ItemDisplay ref={itemRef} title={title} description={description} />
+      </Grid>
+    </div>
   );
 });
 
 class App extends Component {
   infiniteLoaderRef = React.createRef();
+  listRef = React.createRef();
+  maxWidth = 0;
 
-  /*componentDidUpdate(prevProps) {
-    if (!prevProps.reset && this.props.reset && this.infiniteLoaderRef.current) {
-      this.infiniteLoaderRef.current.resetloadMoreItemsCache(true);
+  rowSizeMap = {};
+
+  setRowSize = (index, size) => {
+    // console.log("setting", index, size);
+    if (this.rowSizeMap[index]) {
+      if (this.rowSizeMap[index] < size) {
+        this.rowSizeMap[index] = size;
+        this.listRef.current.resetAfterIndex(index);
+      }
+    } else {
+      this.rowSizeMap[index] = size;
+      this.listRef.current.resetAfterIndex(index);
     }
-  }*/
+  };
 
   componentDidMount() {
     //load first set
@@ -58,6 +87,10 @@ class App extends Component {
     return Math.ceil(itemsAmount / maxItemsPerRow) + (hasMore ? 1 : 0);
   };
 
+  getRowHeight = index => {
+    return this.rowSizeMap[index] || ITEM_HEIGHT;
+  };
+
   generateIndexesForRow = (rowIndex, maxItemsPerRow, itemsAmount) => {
     const result = [];
     const startIndex = rowIndex * maxItemsPerRow;
@@ -73,14 +106,24 @@ class App extends Component {
     return result;
   };
 
+  //hack to use react virtualized window scroller with react window
+  handleScroll = ({ scrollTop }) => {
+    if (this.listRef.current) {
+      this.listRef.current.scrollTo(scrollTop);
+    }
+  };
+
   render() {
     const { items } = this.props;
-    console.log("items length", items);
 
     return (
       <div className="App">
+        <WindowScroller onScroll={this.handleScroll}>
+          {() => null}
+        </WindowScroller>
         <AutoSizer>
           {({ height, width }) => {
+            this.maxWidth = width;
             const rowCount = this.getNumberOfRows(width, items.length, true);
 
             const rowRenderer = ({ index, style }) => {
@@ -96,7 +139,15 @@ class App extends Component {
               return (
                 <div style={style} className={"mui-row"}>
                   {itemsToRender.map(item => (
-                    <RowItem key={item.id} id={item.id} title={item.title} />
+                    <RowItem
+                      windowWidth={width}
+                      rowIndex={index}
+                      setRowSize={this.setRowSize}
+                      key={item.id}
+                      id={item.id}
+                      title={item.title}
+                      description={item.description}
+                    />
                   ))}
                 </div>
               );
@@ -104,7 +155,7 @@ class App extends Component {
 
             return (
               <InfiniteLoader
-                ref={this.infiniteLoaderRef}
+                threshold={5}
                 isItemLoaded={index => {
                   const { items } = this.props;
                   const maxItemsPerRow = this.getItemsPerRow(width);
@@ -114,25 +165,28 @@ class App extends Component {
                       maxItemsPerRow,
                       items.length
                     ).length > 0;
-                  //return !hasMore || allItemsLoaded;
+              
                   return allItemsLoaded;
                 }}
                 itemCount={rowCount}
                 loadMoreItems={this.loadNextPage}
               >
-                {({ onItemsRendered, ref }) => (
-                  <List
-                    className="mui-grid"
-                    ref={ref}
-                    height={height}
-                    itemCount={rowCount}
-                    itemSize={ITEM_HEIGHT}
-                    onItemsRendered={onItemsRendered}
-                    width={width}
-                  >
-                    {rowRenderer}
-                  </List>
-                )}
+                {({ onItemsRendered, ref }) => {
+                  return (
+                    <List
+                      className="mui-grid"
+                      ref={this.listRef}
+                      height={height}
+                      itemCount={rowCount}
+                      estimatedItemSize={ITEM_HEIGHT}
+                      itemSize={this.getRowHeight}
+                      onItemsRendered={onItemsRendered}
+                      width={width}
+                    >
+                      {rowRenderer}
+                    </List>
+                  );
+                }}
               </InfiniteLoader>
             );
           }}
@@ -143,7 +197,6 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  //console.log("state", state)
   return {
     items: state.items,
     isFetching: state.isFetching
@@ -157,7 +210,4 @@ const mapDispatchToProps = dispatch => ({
     })
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

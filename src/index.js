@@ -6,6 +6,7 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { createEpicMiddleware, ofType, } from 'redux-observable';
 import { delay, map } from 'rxjs/operators'
 import uuid from 'uuidv4';
+import faker from 'faker';
 import './index.css';
 import App from './App';
 
@@ -14,7 +15,8 @@ const createItems = (numberToCreate = 30) => {
         const newId = uuid().toString() + (Math.random() * 100).toString();
         return {
             id: newId,
-            title: `title-${newId}`
+            title: `title-${newId}`,
+            description: faker.lorem.sentence()
         }
     });
 

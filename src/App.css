@@ -25,7 +25,10 @@ ul li:hover{
   background-color: #ccc
 }*/
 
-html, body, #root, .App {
+html,
+body,
+#root,
+.App {
   height: 100%;
 }
 
@@ -61,8 +64,13 @@ html, body, #root, .App {
   border: 1px solid #eee;
 }*/
 
+.window-scroller-override {
+  height: 100% !important;
+}
+
 .mui-grid {
-  justify-content: center
+  height: auto !important;
+  justify-content: center;
 }
 
 .mui-grid-item {
@@ -72,5 +80,21 @@ html, body, #root, .App {
 
 .mui-row {
   display: flex;
-  justify-content: space-evenly
+  justify-content: space-evenly;
+}
+
+.bordered {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
+
+.item img {
+  height: 90px;
+  align-self: center;
 }
