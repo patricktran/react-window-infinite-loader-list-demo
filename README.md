@@ -5,10 +5,12 @@
 I wanted to figure out a way to render a virtualized grid with infinite loading.
 
 Not only does this grid need to be virtualized for performance reasons, it must also be responsive and support rows of varying heights (just-in-time measured content)!
-
+\
+\
+\
 react-virtualized [https://github.com/bvaughn/react-window](https://github.com/bvaughn/react-window)
 
-thanks to: [https://github.com/bvaughn/react-window/issues/6](https://github.com/bvaughn/react-window/issues/6)
+great discussion here: [https://github.com/bvaughn/react-window/issues/6](https://github.com/bvaughn/react-window/issues/6)
 
 ### `npm install`
 
