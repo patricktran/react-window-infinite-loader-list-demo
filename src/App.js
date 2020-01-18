@@ -57,7 +57,7 @@ class App extends Component {
     if (this.rowSizeMap[index]) {
       if (this.rowSizeMap[index] < size) {
         this.rowSizeMap[index] = size;
-        this.listRef.current.resetAfterIndex(index);
+        this.listRef.current.resetAfterIndex(index); //https://react-window.now.sh/#/api/VariableSizeList
       }
     } else {
       this.rowSizeMap[index] = size;
