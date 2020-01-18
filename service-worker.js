@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/react-virtualized-infinite-loader-list-demo/precache-manifest.0f152ff359a8a74cd9ca8943e657a6cd.js"
+  "/react-window-infinite-loader-list-demo/precache-manifest.6a32176747adb6030cf35984524e9e7d.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/react-virtualized-infinite-loader-list-demo/index.html", {
+workbox.routing.registerNavigationRoute("/react-window-infinite-loader-list-demo/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
